@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const EMPLOYEE_API_BASE_URL = window._env_.API_URL + "/api/v1/employees";
+const EMPLOYEE_API_BASE_URL = window.env.API_BASE_URL + "/api/v1/employees";
 
 class EmployeeService {
 
