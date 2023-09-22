@@ -1,4 +1,4 @@
-FROM node:18.16.0-buster-slim AS react-build
+FROM node:18.17.0-bullseye-slim AS react-build
 ENV NODE_ENV production
 WORKDIR /app
 COPY ./package.json ./
