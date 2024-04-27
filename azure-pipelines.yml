@@ -7,28 +7,28 @@ pool:
 steps:
 - task: Docker@2
   inputs:
-    containerRegistry: 'lneContainer'
+    containerRegistry: 'lneServiceC'
     repository: 'lnecontainer.azurecr.io/react-app'
     command: 'build'
     Dockerfile: '**/Dockerfile'  # Path to your Dockerfile for the React app
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'lneContainer'
+    containerRegistry: 'lneServiceC'
     repository: 'lnecontainer.azurecr.io/node-app'
     command: 'build'
     Dockerfile: '**/Dockerfile'  # Path to your Dockerfile for the Node.js app
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'lneContainer'
+    containerRegistry: 'lneServiceC'
     repository: 'lnecontainer.azurecr.io/react-app'
     command: 'push'
     tags: 'latest'  # Optionally, you can specify a tag for the Docker image
 
 - task: Docker@2
   inputs:
-    containerRegistry: 'lneContainer'
+    containerRegistry: 'lneServiceC'
     repository: 'lnecontainer.azurecr.io/node-app'
     command: 'push'
     tags: 'latest'  # Optionally, you can specify a tag for the Docker image
