@@ -10,7 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'azuredocker'
+  dockerRegistryServiceConnection: 'azureconnection'
   imageRepository: 'pritishsamplereactapp'
   containerRegistry: 'lnecontainer.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
