@@ -1,39 +1,28 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
-- main
+  branches:
+    include:
+      - main
 
-resources:
-- repo: self
+pool:
+  vmImage: 'ubuntu-latest'
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '3deaf9af-2665-4d0f-bf1b-2997c99dee6c'
-  imageRepository: 'pritishsamplereactapp'
-  containerRegistry: 'lnecontainer.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
-  tag: '$(Build.BuildId)'
-
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  imageName: 'myreactapp'
+  dockerRegistryServiceConnection: 'lnePritishServiceConnection'  # The name of your service connection
+  dockerRepository: 'lneReactRepo'  # The repository name in your ACR
+  dockerImageTag: '$(Build.BuildId)'
 
 stages:
 - stage: Build
-  displayName: Build and push stage
   jobs:
   - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: Build and push Docker image
       inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(dockerRepository)
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
         tags: |
-          $(tag)
+          $(dockerImageTag)
