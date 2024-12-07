@@ -1,28 +1,30 @@
 trigger:
-  branches:
-    include:
-      - main
+- main  # Change to the branch you want to trigger the pipeline on
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  imageName: 'myreactapp'
-  dockerRegistryServiceConnection: 'lnePritishServiceConnection'  # The name of your service connection
-  dockerRepository: 'lneReactRepo'  # The repository name in your ACR
-  dockerImageTag: '$(Build.BuildId)'
+  # Define variables for the ACR and image details
+  ACR_NAME: 'azurereactcr'  # Replace with your ACR name
+  IMAGE_NAME: 'sample-react-app'
 
-stages:
-- stage: Build
-  jobs:
-  - job: Build
-    steps:
-    - task: Docker@2
-      displayName: Build and push Docker image
-      inputs:
-        containerRegistry: $(dockerRegistryServiceConnection)
-        repository: $(dockerRepository)
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(dockerImageTag)
+steps:
+- task: UseAzureCLI@2
+  inputs:
+    azureSubscription: 'azurereactcr' # Your ACR service connection
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "Logging into Azure Container Registry..."
+      az acr login --name $(ACR_NAME)
+
+- script: |
+    echo "Building Docker image for React app..."
+    docker build -t $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(Build.BuildId) .
+  displayName: 'Build Docker Image'
+
+- script: |
+    echo "Pushing Docker image to ACR..."
+    docker push $(ACR_NAME).azurecr.io/$(IMAGE_NAME):$(Build.BuildId)
+  displayName: 'Push Docker Image to ACR'
